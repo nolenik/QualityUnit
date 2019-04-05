@@ -121,6 +121,7 @@ public class Test {
 	    	int subTotal=0, count=0,total=0;
 	    	for (Waiting w:waiting)
 	    	{
+	    		
 	    		List<String> services = new ArrayList<>(), qServices= new ArrayList<>(), questions= new ArrayList<>(), qQuestions= new ArrayList<>();
 	    		if(w.service.indexOf(".")!=-1)
 	    		{
@@ -181,34 +182,37 @@ public class Test {
 	    		{
 	    			if((questions.size()>=qQuestions.size() && questionId.equals(qQuestionId) && (qQuestionCategory==null || questionCategory.equals(qQuestionCategory)) && (qQuestionSubCategory==null || questionSubCategory.equals(qQuestionSubCategory))) || qQuestionId.equals("*"))
 	    			{
-	    				if(q.date.indexOf("-")!=-1)
+	    				if (q.answer.equals(w.answer))
 	    				{
-	    					String[] date = q.date.split("\\-");
-	    					dateFrom = new SimpleDateFormat("dd.MM.yyy").parse(date[0]);
-	    					dateTo = new SimpleDateFormat ("dd.MM.yyy").parse(date[1]);
-	    				}
-	    				else
-	    				{
-	    					dateFrom = new SimpleDateFormat("dd.MM.yyyy").parse(q.date);
-	    				}
-	    				if (dateTo!=null)
-	    				{
-	    				    if (new SimpleDateFormat("dd.MM.yyy").parse(w.date).before(dateTo) && new SimpleDateFormat("dd.MM.yyy").parse(w.date).after(dateFrom))
+	    				    if(q.date.indexOf("-")!=-1)
 	    				    {
-	    					    subTotal+=Integer.parseInt(w.time);
-	    					    count++;
+	    					    String[] date = q.date.split("\\-");
+	    					    dateFrom = new SimpleDateFormat("dd.MM.yyy").parse(date[0]);
+	    					    dateTo = new SimpleDateFormat ("dd.MM.yyy").parse(date[1]);
+	    				    }
+	    				    else
+	    				    {
+	    					    dateFrom = new SimpleDateFormat("dd.MM.yyyy").parse(q.date);
+	    				    }
+	    				    if (dateTo!=null)
+	    				    {
+	    				        if (new SimpleDateFormat("dd.MM.yyy").parse(w.date).before(dateTo) && new SimpleDateFormat("dd.MM.yyy").parse(w.date).after(dateFrom))
+	    				        {
+	    					        subTotal+=Integer.parseInt(w.time);
+	    					        count++;
 	    					    
+	    				        }   
 	    				    }
-	    				}
-	    				else
-	    				{
-	    					if (new SimpleDateFormat("dd.MM.yyy").parse(w.date).after(dateFrom))
+	    				    else
 	    				    {
-	    					    subTotal+=Integer.parseInt(w.time);
-	    					    count++;
+	    					    if (new SimpleDateFormat("dd.MM.yyy").parse(w.date).after(dateFrom))
+	    				        {
+	    					        subTotal+=Integer.parseInt(w.time);
+	    					        count++;
 	    					
+	    				        }
 	    				    }
-	    				}
+	    			    }
 	    			}
 	    		}
 	    		
