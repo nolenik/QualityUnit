@@ -114,16 +114,21 @@ public class Test {
 	    {
 	    	String serviceId,qServiceId,subService=null,qSubService=null,questionId,qQuestionId,questionCategory=null,qQuestionCategory=null,questionSubCategory=null,qQuestionSubCategory=null;
 	    	
-	    	String[] services, qServices,questions, qQuestions;
+	    	String[] tmpServices, tmpqServices, tmpQuestions, tmpqQuestions;
+	    	
+//	    	System.out.println(s.length);
 	    	Date dateFrom,dateTo = null;
 	    	int subTotal=0, count=0,total=0;
 	    	for (Waiting w:waiting)
 	    	{
+	    		List<String> services = new ArrayList<>(), qServices= new ArrayList<>(), questions= new ArrayList<>(), qQuestions= new ArrayList<>();
 	    		if(w.service.indexOf(".")!=-1)
 	    		{
-	    			services = w.service.split("\\.");
-	    			serviceId=services[0];
-	    			subService=services[1];
+	    			tmpServices = w.service.split("\\.");
+	    	        for (String s: tmpServices)
+	    	        	services.add(s);
+	    			serviceId=services.get(0);
+	    			subService=services.get(1);
 	 
 	    		}
 	    		else
@@ -132,9 +137,11 @@ public class Test {
 	    		}
 	    		if(q.service.indexOf(".")!=-1)
 	    		{
-	    			qServices = q.service.split("\\.");
-	    			qServiceId=qServices[0];
-	    			qSubService=qServices[1];
+	    			tmpqServices = q.service.split("\\.");
+	    			 for (String s: tmpqServices)
+		    	        	qServices.add(s);
+	    			qServiceId=qServices.get(0);
+	    			qSubService=qServices.get(1);
 	    		}
 	    		else
 	    		{
@@ -142,11 +149,13 @@ public class Test {
 	    		}
 	    		if (w.question.indexOf(".")!=-1)
 	    		{
-	    			questions = w.question.split("\\.");
-	    			questionId=questions[0];
-	    			questionCategory = questions[1];
-	    			if (questions.length==3)
-	    				questionSubCategory = questions[2];
+	    			tmpQuestions = w.question.split("\\.");
+	    			for (String s: tmpQuestions)
+	    	        	questions.add(s);
+	    			questionId=questions.get(0);
+	    			questionCategory = questions.get(1);
+	    			if (questions.size()==3)
+	    				questionSubCategory = questions.get(2);
 	    		}
 	    		else
 	    		{
@@ -154,26 +163,29 @@ public class Test {
 	    		}
 	    		if (q.question.indexOf(".")!=-1)
 	    		{
-	    			qQuestions = q.question.split("\\.");
-	    			qQuestionId=qQuestions[0];
-	    			qQuestionCategory = qQuestions[1];
-	    			if (qQuestions.length==3)
-	    				questionSubCategory = qQuestions[2];
+	    			tmpqQuestions = q.question.split("\\.");
+	    			for(String s:tmpqQuestions)
+	    				qQuestions.add(s);
+	    			qQuestionId=qQuestions.get(0);
+	    			qQuestionCategory = qQuestions.get(1);
+	    			if (qQuestions.size()>2)
+	    				qQuestionSubCategory = qQuestions.get(2);
+	    			System.out.println(qQuestions);
 	    		}
 	    		else
 	    		{
 	    			qQuestionId=q.question;
 	    		}
 	    	
-	    		if((serviceId.equals(qServiceId) && (subService.equals(qSubService) || qSubService==null)) || qServiceId.equals("*"))
+	    		if((services.size()>=qServices.size() && serviceId.equals(qServiceId) && (qSubService==null || subService.equals(qSubService))) || qServiceId.equals("*"))
 	    		{
-	    			if((questionId.equals(qQuestionId) && (questionCategory.equals(qQuestionCategory) || qQuestionCategory==null) && (questionSubCategory.equals(qQuestionSubCategory) || qQuestionSubCategory==null)) || qQuestionId.equals("*"))
+	    			if((questions.size()>=qQuestions.size() && questionId.equals(qQuestionId) && (qQuestionCategory==null || questionCategory.equals(qQuestionCategory)) && (qQuestionSubCategory==null || questionSubCategory.equals(qQuestionSubCategory))) || qQuestionId.equals("*"))
 	    			{
 	    				if(q.date.indexOf("-")!=-1)
 	    				{
 	    					String[] date = q.date.split("\\-");
 	    					dateFrom = new SimpleDateFormat("dd.MM.yyy").parse(date[0]);
-	    					dateTo = new SimpleDateFormat("dd.MM.yyy").parse(date[1]);
+	    					dateTo = new SimpleDateFormat ("dd.MM.yyy").parse(date[1]);
 	    				}
 	    				else
 	    				{
